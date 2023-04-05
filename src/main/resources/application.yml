@@ -11,11 +11,11 @@ spring:
       client:
         registration:
           kakao:
-            clientId: 0e59d4068f2c83091f3c4511cb557c15
+            clientId: 3a83cf40336713fca7bb2949b4cde036
             scope:
             client-name: Kakao
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://localhost:8081/login/oauth2/code/kakao
             client-authentication-method: POST
         provider:
           kakao:
@@ -37,3 +37,5 @@ logging:
     com.ll.gramgram_ai: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
+server:
+  port: 8081
