@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ import java.util.List;
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/add")
     public String showAdd() {
         return "usr/likeablePerson/add";
@@ -38,7 +39,7 @@ public class LikeablePersonController {
         private final String username;
         private final int attractiveTypeCode;
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
@@ -49,7 +50,7 @@ public class LikeablePersonController {
 
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String showList(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
@@ -62,22 +63,16 @@ public class LikeablePersonController {
 
         return "usr/likeablePerson/list";
     }
-
-    @GetMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/delete/{id}")
     public String likeablePersondelete(@PathVariable Long id) {
 
+        RsData deleteRs = likeablePersonService.delete(rq.getMember(), id);
 
-        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(rq.getLikeablePerson());
+       if(deleteRs.isFail()) return rq.historyBack(deleteRs);
 
 
-        if (!deleteRsData.getData().getId().equals(likeablePersonService.findById(id))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
-        }
 
-        if (deleteRsData.isFail()) {
-            return rq.historyBack(deleteRsData);
-        }
-
-        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
 }

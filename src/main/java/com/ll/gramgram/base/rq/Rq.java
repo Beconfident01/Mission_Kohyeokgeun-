@@ -3,7 +3,6 @@ package com.ll.gramgram.base.rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
-import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.standard.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +25,6 @@ public class Rq {
     private final User user;
     private Member member = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
-    private LikeablePerson likeablePerson = null;
 
     public Rq(MemberService memberService, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
         this.memberService = memberService;
@@ -66,14 +64,6 @@ public class Rq {
         return member;
     }
 
-    public LikeablePerson getLikeablePerson() {
-
-        if (likeablePerson == null) {
-            return null;
-        }
-
-        return likeablePerson;
-    }
 
     // 뒤로가기 + 메세지
     public String historyBack(String msg) {

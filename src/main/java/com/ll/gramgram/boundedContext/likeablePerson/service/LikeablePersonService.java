@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,21 +46,27 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
-    public RsData<LikeablePerson> delete(LikeablePerson likeablePerson) {
+    @Transactional
+    public RsData delete(Member actor, Long id) {
+        LikeablePerson likeablePerson = findById(id).orElse(null);
+
+        if (likeablePerson == null) return RsData.of("S-1", "이미 취소된 호감입니다.");
+
+        if (!Objects.equals(actor.getInstaMember().getId(), likeablePerson.getFromInstaMember().getId()))
+            return RsData.of("S-2", "권한이 없습니다.");
+
+        String toInstaMemberName =likeablePerson.getToInstaMember().getUsername();
+    likeablePersonRepository.delete(likeablePerson);
+
+    return  RsData.of("S-1","%s님에 대한 호감을 취소하였습니다.".formatted(toInstaMemberName));
+   }
 
 
-        likeablePersonRepository.delete(likeablePerson);
-
-
-        return RsData.of("S-1", "선택하신 인스타유저를 호감상대에서 삭제했습니다.");
-
-
-    }
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
-    public List<LikeablePerson> findById(Long id) {
+    public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
     }
 }
