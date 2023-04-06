@@ -9,14 +9,11 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -61,23 +58,5 @@ public class LikeablePersonController {
         }
 
         return "usr/likeablePerson/list";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String likeablePersondelete(@PathVariable Long id) {
-
-
-        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(rq.getLikeablePerson());
-
-
-        if (!deleteRsData.getData().getId().equals(likeablePersonService.findById(id))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
-        }
-
-        if (deleteRsData.isFail()) {
-            return rq.historyBack(deleteRsData);
-        }
-
-        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
     }
 }
