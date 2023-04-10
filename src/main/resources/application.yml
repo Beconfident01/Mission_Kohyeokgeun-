@@ -1,6 +1,11 @@
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   profiles:
     active: dev
+    include: secret
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://127.0.0.1:3306/gram__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
@@ -11,18 +16,21 @@ spring:
       client:
         registration:
           kakao:
-            clientId: 3a83cf40336713fca7bb2949b4cde036
             scope:
             client-name: Kakao
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8081/login/oauth2/code/kakao
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
+            google:
+              redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+              client-name: Google
+              scope: profile
+              provider:
+                kakao:
+                  authorization-uri: https://kauth.kakao.com/oauth/authorize
+                  token-uri: https://kauth.kakao.com/oauth/token
+                  user-info-uri: https://kapi.kakao.com/v2/user/me
+                  user-name-attribute: id
   jpa:
     hibernate:
       ddl-auto: create
