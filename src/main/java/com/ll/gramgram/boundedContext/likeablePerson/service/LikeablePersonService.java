@@ -57,6 +57,7 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+<<<<<<< HEAD
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
@@ -78,4 +79,6 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
+=======
+>>>>>>> ef29150787f53bde8a4507b4f6ffdcd06f7b7ed1
 }

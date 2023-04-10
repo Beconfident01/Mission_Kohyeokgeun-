@@ -9,10 +9,18 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+<<<<<<< HEAD
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+=======
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+>>>>>>> ef29150787f53bde8a4507b4f6ffdcd06f7b7ed1
 
 import java.util.List;
 
@@ -62,6 +70,7 @@ public class LikeablePersonController {
 
         return "usr/likeablePerson/list";
     }
+<<<<<<< HEAD
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
@@ -79,3 +88,6 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
 }
+=======
+}
+>>>>>>> ef29150787f53bde8a4507b4f6ffdcd06f7b7ed1
