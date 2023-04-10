@@ -9,15 +9,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +22,7 @@ import java.util.List;
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/add")
     public String showAdd() {
@@ -39,6 +35,7 @@ public class LikeablePersonController {
         private final String username;
         private final int attractiveTypeCode;
     }
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
@@ -50,6 +47,7 @@ public class LikeablePersonController {
 
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String showList(Model model) {
@@ -57,21 +55,26 @@ public class LikeablePersonController {
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
-            List<LikeablePerson> likeablePeople = likeablePersonService.findByFromInstaMemberId(instaMember.getId());
+            // 해당 인스타회원이 좋아하는 사람들 목록
+            List<LikeablePerson> likeablePeople = instaMember.getFromLikeablePeople();
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
         return "usr/likeablePerson/list";
     }
+
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/delete/{id}")
-    public String likeablePersondelete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id) {
+        LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
 
-        RsData deleteRs = likeablePersonService.delete(rq.getMember(), id);
+        RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
 
-       if(deleteRs.isFail()) return rq.historyBack(deleteRs);
+        if (canActorDeleteRsData.isFail()) return rq.historyBack(canActorDeleteRsData);
 
+        RsData deleteRs = likeablePersonService.delete(likeablePerson);
 
+        if (deleteRs.isFail()) return rq.historyBack(deleteRs);
 
         return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }

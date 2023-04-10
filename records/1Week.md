@@ -10,6 +10,7 @@
 - [x] 삭제 후, 다시 호감목록 페이지로 돌아오기
 
 - [x] rq.redirectWithMsg 함수 사용
+- [x] 구글 로그인 구현
 
 [접근 방법]
 -LikeablePersonController 에서 delete함수를 만들어서 삭제 권한을 검사하고 LikeablePersonService의 delete메서드로 삭제르 시도했습니다.
@@ -26,3 +27,7 @@ rq.redirectWithMsg 함수 사용했습니다.
 - 보안상 중요한 REST API KEY를 .gitignore로 숨겼습니다.
 - 삭제기능은 구현되는데 삭제 테스트케이스는 구현에 실패했습니다.
 - 컨트롤러에서 소유권 검사 -> 서비스에서 소유권 검사 로 리팩토링했습니다.
+
+[2차 Refactoring]
+
+- 구글 로그인을 구현했습니다.
