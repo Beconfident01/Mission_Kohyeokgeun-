@@ -41,11 +41,18 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
+
+        //service에서 add를 할 수 있는지 검사를 합니다.
+        RsData<LikeablePerson> canActorAddRsData = likeablePersonService.canActorAdd(rq.getMember(), addForm.getUsername(),addForm.getAttractiveTypeCode());
+
+        if (canActorAddRsData.isFail()) return rq.historyBack(canActorAddRsData);
+
+        //if(canActorAddRsData.getResultCode().equals("S-2"))return rq.redirectWithMsg("/likeablePerson/list", canActorAddRsData);
+        //이런 식으로 만들면 수정됐다는 알림은 뜨지만 수정은 되지않았습니다.
+
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
 
-        if (createRsData.isFail()) {
-            return rq.historyBack(createRsData);
-        }
+        if (createRsData.isFail()) return rq.historyBack(createRsData);
 
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
