@@ -25,6 +25,7 @@ public class Rq {
     private final User user;
     private Member member = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
+
     public Rq(MemberService memberService, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
         this.memberService = memberService;
         this.req = req;
@@ -63,12 +64,16 @@ public class Rq {
         return member;
     }
 
+
     // 뒤로가기 + 메세지
     public String historyBack(String msg) {
         String referer = req.getHeader("referer");
         String key = "historyBackErrorMsg___" + referer;
+<<<<<<< HEAD
         req.setAttribute("localStorageKeyAboutHistoryBackErrorMsg", key);
         req.setAttribute("historyBackErrorMsg", msg);
+=======
+>>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
         // 200 이 아니라 400 으로 응답코드가 지정되도록
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "common/js";

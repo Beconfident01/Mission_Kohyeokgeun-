@@ -198,6 +198,7 @@ public class LikeablePersonServiceTests {
 
         assertThat(likeablePerson.getId()).isEqualTo(2);
     }
+<<<<<<< HEAD
 
     @Test
     @DisplayName("테스트 5")
@@ -207,3 +208,6 @@ public class LikeablePersonServiceTests {
         assertThat(likeablePerson.getId()).isEqualTo(1L);
     }
 }
+=======
+}
+>>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493

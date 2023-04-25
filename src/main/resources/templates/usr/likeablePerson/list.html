@@ -6,9 +6,15 @@
 
 <body>
 
+<<<<<<< HEAD
 <main layout:fragment="main" class="flex-grow flex items-center justify-center">
     <div class="max-w-2xl w-full px-4">
         <div th:unless="${@rq.member.hasConnectedInstaMember}" th:include="usr/part/needToConnect::base"></div>
+=======
+<main layout:fragment="main">
+    <th:block th:unless="${@rq.member.hasConnectedInstaMember}">
+        <div>먼저 본인의 인스타그램 아이디를 입력해주세요.</div>
+>>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 
         <th:block th:if="${@rq.member.hasConnectedInstaMember}">
             <div th:unless="${!#lists.isEmpty(likeablePeople)}" class="text-center">
@@ -67,9 +73,28 @@
             <a th:if="${@rq.member.hasConnectedInstaMember}" href="like" class="btn btn-link">호감표시</a>
             <a th:if="${@rq.member.hasConnectedInstaMember}" href="/usr/member/me" class="btn btn-link">내 정보</a>
         </div>
+<<<<<<< HEAD
     </div>
+=======
+    </th:block>
+
+    <th:block th:if="${@rq.member.hasConnectedInstaMember}">
+        <ul>
+            <li th:each="likeablePerson: ${likeablePeople}">
+                <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>
+                <span class="toInstaMember_attractiveTypeDisplayName"
+                      th:text="${likeablePerson.attractiveTypeDisplayName}"></span>
+                <a href="javascript:;" onclick="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();">삭제</a>
+                <form hidden th:action="@{|/likeablePerson/${likeablePerson.id}|}" method="POST">
+                    <input type="hidden" name="_method" value="delete">
+                </form>
+            </li>
+        </ul>
+    </th:block>
+>>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 </main>
 </body>
 
 </html>
+
 
