@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -19,9 +20,12 @@ import java.util.Optional;
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
+    InstaMember fromInstaMember = null;
+    InstaMember toInstaMember = null;
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
+
         if (member.hasConnectedInstaMember() == false) {
             return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
@@ -30,8 +34,8 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
-        InstaMember fromInstaMember = member.getInstaMember();
-        InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+        fromInstaMember = member.getInstaMember();
+        toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
@@ -51,11 +55,14 @@ public class LikeablePersonService {
         toInstaMember.addToLikeablePerson(likeablePerson);
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+
+
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
@@ -82,4 +89,30 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
+
+    public RsData<LikeablePerson> canActorAdd(Member member, String username, int attractiveTypeCode) {
+
+        long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
+        if(likeablePersonFromMax ==11){return RsData.of("F-2", "호감표시는 10개를 초과할 수 없습니다.");}
+
+        InstaMember frominstaMember = member.getInstaMember();
+
+
+        LikeablePerson likeablePerson = frominstaMember
+                .getFromLikeablePeople()
+                .stream()
+                .filter(lp -> lp.getToInstaMember().getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+
+        if (likeablePerson != null) {
+            if(likeablePerson.getAttractiveTypeCode() != attractiveTypeCode){
+                likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+            return RsData.of("S-2","호감표시를 수정했습니다.");
+            }
+            return RsData.of("F-1", "이미 호감표시를 했습니다.기존 호감사유는 %s입니다.".formatted(likeablePerson.getAttractiveTypeDisplayName()));
+        }
+            return RsData.of("S-1", "호감 표시가 가능합니다.");
+        }
 }
+
