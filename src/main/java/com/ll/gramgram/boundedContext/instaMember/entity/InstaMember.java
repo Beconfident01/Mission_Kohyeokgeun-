@@ -2,7 +2,6 @@ package com.ll.gramgram.boundedContext.instaMember.entity;
 
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import jakarta.persistence.*;
-<<<<<<< HEAD
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,16 +10,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-=======
-import lombok.*;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +21,6 @@ import java.util.List;
 public class InstaMember extends InstaMemberBase {
     @Column(unique = true)
     private String username;
-<<<<<<< HEAD
-=======
-    @Setter
-    private String gender;
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 
     @OneToMany(mappedBy = "fromInstaMember", cascade = {CascadeType.ALL})
     @OrderBy("id desc") // 정렬
@@ -57,7 +41,6 @@ public class InstaMember extends InstaMemberBase {
     public void addToLikeablePerson(LikeablePerson likeablePerson) {
         toLikeablePeople.add(0, likeablePerson);
     }
-<<<<<<< HEAD
 
     public void removeFromLikeablePerson(LikeablePerson likeablePerson) {
         fromLikeablePeople.removeIf(e -> e.equals(likeablePerson));
@@ -113,6 +96,3 @@ public class InstaMember extends InstaMemberBase {
 
     }
 }
-=======
-}
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493

@@ -46,7 +46,6 @@ public class LikeablePerson extends BaseEntity {
         };
     }
 
-<<<<<<< HEAD
     public String getAttractiveTypeDisplayNameWithIcon() {
         return switch (attractiveTypeCode) {
             case 1 -> "<i class=\"fa-solid fa-person-rays\"></i>";
@@ -55,9 +54,3 @@ public class LikeablePerson extends BaseEntity {
         } + "&nbsp;" + getAttractiveTypeDisplayName();
     }
 }
-=======
-    public void setAttractiveTypeCode(int attractiveTypeCode) {
-        this.attractiveTypeCode = attractiveTypeCode;
-    }
-}
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493

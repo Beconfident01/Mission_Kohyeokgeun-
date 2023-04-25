@@ -10,18 +10,10 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-<<<<<<< HEAD
-=======
-
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-<<<<<<< HEAD
-=======
-
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 
 import java.util.List;
 
@@ -33,15 +25,9 @@ public class LikeablePersonController {
     private final LikeablePersonService likeablePersonService;
 
     @PreAuthorize("isAuthenticated()")
-<<<<<<< HEAD
     @GetMapping("/like")
     public String showLike() {
         return "usr/likeablePerson/like";
-=======
-    @GetMapping("/add")
-    public String showAdd() {
-        return "usr/likeablePerson/add";
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
     }
 
     @AllArgsConstructor
@@ -57,7 +43,6 @@ public class LikeablePersonController {
     }
 
     @PreAuthorize("isAuthenticated()")
-<<<<<<< HEAD
     @PostMapping("/like")
     public String like(@Valid LikeForm likeForm) {
         RsData<LikeablePerson> rsData = likeablePersonService.like(rq.getMember(), likeForm.getUsername(), likeForm.getAttractiveTypeCode());
@@ -65,22 +50,6 @@ public class LikeablePersonController {
         if (rsData.isFail()) {
             return rq.historyBack(rsData);
         }
-=======
-    @PostMapping("/add")
-    public String add(@Valid AddForm addForm) {
-
-        //service에서 add를 할 수 있는지 검사를 합니다.
-        RsData<LikeablePerson> canActorAddRsData = likeablePersonService.canActorAdd(rq.getMember(), addForm.getUsername(),addForm.getAttractiveTypeCode());
-
-        if (canActorAddRsData.isFail()) return rq.historyBack(canActorAddRsData);
-
-        //if(canActorAddRsData.getResultCode().equals("S-2"))return rq.redirectWithMsg("/likeablePerson/list", canActorAddRsData);
-        //이런 식으로 만들면 수정됐다는 알림은 뜨지만 수정은 되지않았습니다.
-
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
-
-        if (createRsData.isFail()) return rq.historyBack(createRsData);
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 
         return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
     }
@@ -102,7 +71,6 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-<<<<<<< HEAD
     public String cancel(@PathVariable Long id) {
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
 
@@ -150,19 +118,5 @@ public class LikeablePersonController {
         }
 
         return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
-=======
-    public String delete(@PathVariable Long id) {
-        LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
-
-        RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
-
-        if (canActorDeleteRsData.isFail()) return rq.historyBack(canActorDeleteRsData);
-
-        RsData deleteRsData = likeablePersonService.delete(likeablePerson);
-
-        if (deleteRsData.isFail()) return rq.historyBack(deleteRsData);
-
-        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
     }
 }
