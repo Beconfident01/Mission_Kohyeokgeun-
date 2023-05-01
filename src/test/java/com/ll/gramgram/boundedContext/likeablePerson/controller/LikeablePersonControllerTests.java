@@ -1,17 +1,15 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 
-<<<<<<< HEAD
 import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
-=======
-import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-=======
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -38,15 +33,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class LikeablePersonControllerTests {
     @Autowired
     private MockMvc mvc;
     @Autowired
-<<<<<<< HEAD
     private MemberService memberService;
     @Autowired
-=======
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
     private LikeablePersonService likeablePersonService;
 
     @Test
@@ -98,7 +91,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(content().string(containsString("""
                         id="btn-like-1"
                         """.stripIndent().trim())));
-        ;
     }
 
     @Test
@@ -119,7 +111,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is3xxRedirection());
-        ;
     }
 
     @Test
@@ -140,7 +131,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is3xxRedirection());
-        ;
     }
 
     @Test
@@ -172,7 +162,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(content().string(containsString("""
                         id="btn-modify-like-1"
                         """.stripIndent().trim())));
-        ;
     }
 
     @Test
@@ -193,7 +182,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("modify"))
                 .andExpect(status().is3xxRedirection());
-        ;
     }
 
     @Test
@@ -222,25 +210,16 @@ public class LikeablePersonControllerTests {
                 .andExpect(content().string(containsString("""
                         data-test="toInstaMember_attractiveTypeDisplayName=성격"
                         """.stripIndent().trim())));
-        ;
     }
 
     @Test
-<<<<<<< HEAD
     @DisplayName("호감취소")
-=======
-    @DisplayName("호감삭제")
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
     @WithUserDetails("user3")
     void t006() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
-<<<<<<< HEAD
                         delete("/usr/likeablePerson/1")
-=======
-                        delete("/likeablePerson/1")
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
                                 .with(csrf())
                 )
                 .andDo(print());
@@ -248,36 +227,22 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-<<<<<<< HEAD
                 .andExpect(handler().methodName("cancel"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/usr/likeablePerson/list**"))
-=======
-                .andExpect(handler().methodName("delete"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/likeablePerson/list**"))
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
         ;
 
         assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(false);
     }
 
     @Test
-<<<<<<< HEAD
     @DisplayName("호감취소(없는거 취소, 취소가 안되어야 함)")
-=======
-    @DisplayName("호감삭제(없는거 삭제, 삭제가 안되어야 함)")
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
     @WithUserDetails("user3")
     void t007() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
-<<<<<<< HEAD
                         delete("/usr/likeablePerson/100")
-=======
-                        delete("/likeablePerson/100")
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
                                 .with(csrf())
                 )
                 .andDo(print());
@@ -285,31 +250,19 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-<<<<<<< HEAD
                 .andExpect(handler().methodName("cancel"))
-=======
-                .andExpect(handler().methodName("delete"))
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
                 .andExpect(status().is4xxClientError())
         ;
     }
 
     @Test
-<<<<<<< HEAD
     @DisplayName("호감취소(권한이 없는 경우, 취소가 안됨)")
-=======
-    @DisplayName("호감삭제(권한이 없는 경우, 삭제가 안됨)")
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
     @WithUserDetails("user2")
     void t008() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
-<<<<<<< HEAD
                         delete("/usr/likeablePerson/1")
-=======
-                        delete("/likeablePerson/1")
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
                                 .with(csrf())
                 )
                 .andDo(print());
@@ -317,17 +270,12 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-<<<<<<< HEAD
                 .andExpect(handler().methodName("cancel"))
-=======
-                .andExpect(handler().methodName("delete"))
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
                 .andExpect(status().is4xxClientError())
         ;
 
         assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(true);
     }
-<<<<<<< HEAD
 
     @Test
     @DisplayName("인스타아이디가 없는 회원은 대해서 호감표시를 할 수 없다.")
@@ -347,7 +295,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is4xxClientError());
-        ;
     }
 
     @Test
@@ -368,7 +315,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is4xxClientError());
-        ;
     }
 
     @Test
@@ -389,7 +335,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is4xxClientError());
-        ;
     }
 
     @Test
@@ -417,7 +362,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is4xxClientError());
-        ;
     }
 
     @Test
@@ -438,7 +382,6 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
                 .andExpect(status().is3xxRedirection());
-        ;
 
         Optional<LikeablePerson> opLikeablePerson = likeablePersonService.findByFromInstaMember_usernameAndToInstaMember_username("insta_user3", "insta_user4");
 
@@ -449,6 +392,3 @@ public class LikeablePersonControllerTests {
         assertThat(newAttractiveTypeCode).isEqualTo(2);
     }
 }
-=======
-}
->>>>>>> d35a9ff3bbc13b200aa43b6c4cca9c289cda3493
