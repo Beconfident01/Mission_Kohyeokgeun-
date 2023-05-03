@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 
 @Entity
@@ -40,9 +40,15 @@ public class LikeablePerson extends BaseEntity {
         return modifyUnlockDate.isBefore(LocalDateTime.now());
     }
 
-    // 초 단위에서 올림 해주세요.
+    // 현재 시간과 modifyUnlockDate을 비교해서 남은 시간을 구해서 시간,분 단위로
     public String getModifyUnlockDateRemainStrHuman() {
-        return "2시간 16분";
+        Instant now = Instant.now();
+        //한국 시간대 사용 ( UTC + 09:00)
+        LocalDateTime nowDateTime = LocalDateTime.ofInstant(now, ZoneOffset.of("+09:00"));
+        Duration duration = Duration.between(modifyUnlockDate,nowDateTime).abs();
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        return String.format("%d시간 %d분", hours, minutes);
     }
 
     public RsData updateAttractionTypeCode(int attractiveTypeCode) {
