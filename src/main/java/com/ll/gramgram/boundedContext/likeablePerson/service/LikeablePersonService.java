@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,9 +34,22 @@ public class LikeablePersonService {
         RsData canLikeRsData = canLike(actor, username, attractiveTypeCode);
 
         if (canLikeRsData.isFail()) return canLikeRsData;
-
-        if (canLikeRsData.getResultCode().equals("S-2")) return modifyAttractive(actor, username, attractiveTypeCode);
-
+        //수정으로 넘어가기 전에 3시간이 지났는지 확인
+        if (canLikeRsData.getResultCode().equals("S-2")) {
+            InstaMember fromInstaMember = actor.getInstaMember();
+            InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+            LikeablePerson likeablePerson = likeablePersonRepository.findByFromInstaMemberAndToInstaMemberAndAttractiveTypeCode(fromInstaMember, toInstaMember, attractiveTypeCode);
+            if (likeablePerson == null) {
+                // LikeablePerson 객체가 null일 경우
+                return RsData.of("F-3", "3시간 이내에는 수정이 불가능합니다.");
+            } else if (likeablePerson.isModifyUnlocked() || Duration.between(likeablePerson.getModifyUnlockDate(), Instant.now()).toHours() >= 3) {
+                // 수정이 가능한 경우
+                return modifyAttractive(actor, username, attractiveTypeCode);
+            } else {
+                // 3시간 이내에는 수정이 불가능한 경우
+                return RsData.of("F-3", "3시간 이내에는 수정이 불가능합니다.");
+            }
+        }
         InstaMember fromInstaMember = actor.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
