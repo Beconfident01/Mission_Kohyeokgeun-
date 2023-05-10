@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.controller;
 import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.instaMember.entity.InstaMemberBase;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
@@ -15,7 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -122,13 +127,45 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model) {
+    public String showToList(Model model, String gender, @RequestParam(defaultValue = "0") int attractiveTypeCode, @RequestParam(defaultValue = "1") int sortCode) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream();
+            //성별필터링
+            if (gender != null) {
+                likeablePeopleStream = likeablePeopleStream.filter(p -> p.getFromInstaMember().getGender().equals(gender));
+            }
+            //호감사유필터링
+            if (attractiveTypeCode != 0) {
+                likeablePeopleStream = likeablePeopleStream.filter(p -> p.getAttractiveTypeCode()==attractiveTypeCode);
+            }
+            //정렬 기능
+            switch (sortCode) {
+                case 1:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getCreateDate));
+                    break;
+                case 2:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed());
+                    break;
+                case 3:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(p -> p.getFromInstaMember().getLikes()));
+                    break;
+                case 4:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(p -> -p.getFromInstaMember().getLikes()));
+                    break;
+                case 5:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(p -> p.getFromInstaMember().getGender()));
+                    break;
+                case 6:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getAttractiveTypeCode));
+                    break;
+            }
+
+            List<LikeablePerson> likeablePeople = likeablePeopleStream.collect(Collectors.toList());
+
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
