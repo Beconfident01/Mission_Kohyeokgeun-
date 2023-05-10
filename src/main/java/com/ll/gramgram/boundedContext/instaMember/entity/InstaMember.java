@@ -55,6 +55,14 @@ public class InstaMember extends InstaMemberBase {
         toLikeablePeople.removeIf(e -> e.equals(likeablePerson));
     }
 
+    public String getGender(){
+        return switch (gender){
+            case "M" -> "M";
+            case "W" -> "W";
+            default -> "U";
+        };
+    }
+
     public String getGenderDisplayName() {
         return switch (gender) {
             case "W" -> "여성";
